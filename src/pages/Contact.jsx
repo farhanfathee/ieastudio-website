@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import useScrollReveal from '../hooks/useScrollReveal'
+import Robot3D from '../components/Robot3D'
 import './Contact.css'
 
 function ContactForm() {
@@ -87,14 +88,8 @@ export default function Contact() {
 
   return (
     <>
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0, background: '#050505' }}>
-        <iframe
-          src="https://my.spline.design/3drobot-Jl6wJf8YKj20BkRIUic6iDex/"
-          frameBorder="0"
-          width="100%"
-          height="100%"
-          style={{ display: 'block', transform: 'translateX(15%) scale(1)', transformOrigin: 'center center' }}
-        />
+      <div style={{ position: 'fixed', left: 0, right: 0, bottom: '-10%', height: '50%', zIndex: 0, background: '#050505' }}>
+        <Robot3D />
       </div>
       <div className="contact-page" style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
         <div className="contact-inner">

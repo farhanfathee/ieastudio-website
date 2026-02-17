@@ -8,6 +8,16 @@
   z-index: 1;
 }
 
+/* Transparent footer on contact page */
+.footer--transparent {
+  background: transparent;
+}
+
+.footer--transparent .footer-gradient-line,
+.footer--transparent .footer-divider {
+  opacity: 0.15;
+}
+
 /* Gradient accent line at top */
 .footer-gradient-line {
   height: 1px;

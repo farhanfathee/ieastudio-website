@@ -1,9 +1,12 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import './Footer.css'
 
 export default function Footer() {
+  const location = useLocation()
+  const isContact = location.pathname === '/contact'
+
   return (
-    <footer className="footer">
+    <footer className={`footer${isContact ? ' footer--transparent' : ''}`}>
       <div className="footer-gradient-line" />
 
       <div className="footer-main">
