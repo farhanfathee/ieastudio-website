@@ -8,12 +8,3 @@
   background: #000000;
   pointer-events: none;
 }
-
-/* Mobile: bottom half only */
-@media (max-width: 768px) {
-  .ballpit-bg {
-    top: auto;
-    bottom: 0;
-    height: 50vh;
-  }
-}

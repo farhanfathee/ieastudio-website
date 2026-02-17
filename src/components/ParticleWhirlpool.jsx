@@ -83,7 +83,7 @@ export default function ParticleWhirlpool({ particleCount = 2000, blur = 0, chil
     const effectComposer = new EffectComposer(renderer)
     effectComposer.setSize(width, height)
     effectComposer.addPass(new RenderPass(scene, camera))
-    effectComposer.addPass(new UnrealBloomPass(new Vector2(width, height), 1, 0, 0))
+    effectComposer.addPass(new UnrealBloomPass(new Vector2(width, height), 0.94, 0, 0))
 
     // init
     for (let i = 0; i < particleCount; i++) {
