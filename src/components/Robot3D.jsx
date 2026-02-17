@@ -1,11 +1,9 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 
 export default function Robot3D({ style }) {
   const mountRef = useRef(null)
-  const gyroHandlerRef = useRef(null)
-  const [gyroState, setGyroState] = useState('idle') // idle | prompting | active | denied
   const isMobile = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
   useEffect(() => {
@@ -116,19 +114,29 @@ export default function Robot3D({ style }) {
     let gyroHandler = null
     if (isTouchDevice) {
       gyroHandler = (e) => {
-        // gamma: left/right tilt (-90 to 90), beta: front/back tilt (-180 to 180)
         const gamma = e.gamma || 0
         const beta = e.beta || 0
-
-        // Map gamma to mouse.x: tilt 30° left/right maps to full range
         mouse.x = THREE.MathUtils.clamp(gamma / 30, -1, 1)
-        // Map beta to mouse.y: 45° neutral (phone slightly tilted), ±30° range
         mouse.y = THREE.MathUtils.clamp(-(beta - 45) / 30, -1, 1)
         hasMouse = true
       }
-      gyroHandlerRef.current = gyroHandler
-      // Show the permission prompt on mobile
-      setGyroState('prompting')
+      // Auto-enable gyro: iOS 13+ needs requestPermission, Android works directly
+      if (typeof DeviceOrientationEvent !== 'undefined' &&
+          typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // iOS — request on first user tap anywhere
+        const requestGyro = async () => {
+          try {
+            const perm = await DeviceOrientationEvent.requestPermission()
+            if (perm === 'granted') {
+              window.addEventListener('deviceorientation', gyroHandler)
+            }
+          } catch {}
+          window.removeEventListener('touchend', requestGyro)
+        }
+        window.addEventListener('touchend', requestGyro, { once: true })
+      } else {
+        window.addEventListener('deviceorientation', gyroHandler)
+      }
     }
 
     /* ═══════════ BUTTERFLY CURSOR (desktop only) ═══════════ */
@@ -614,91 +622,5 @@ export default function Robot3D({ style }) {
     }
   }, [])
 
-  // Gyro permission handler — called by the overlay button
-  const enableGyro = useCallback(async () => {
-    try {
-      // iOS 13+ requires explicit permission request from user gesture
-      if (typeof DeviceOrientationEvent !== 'undefined' &&
-          typeof DeviceOrientationEvent.requestPermission === 'function') {
-        const perm = await DeviceOrientationEvent.requestPermission()
-        if (perm === 'granted') {
-          window.addEventListener('deviceorientation', gyroHandlerRef.current)
-          setGyroState('active')
-        } else {
-          setGyroState('denied')
-        }
-      } else {
-        // Android / other — just add listener directly
-        window.addEventListener('deviceorientation', gyroHandlerRef.current)
-        setGyroState('active')
-      }
-    } catch {
-      setGyroState('denied')
-    }
-  }, [])
-
-  return (
-    <>
-      <div ref={mountRef} style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, pointerEvents: isMobile ? 'none' : 'auto', ...style }} />
-      {isMobile && gyroState === 'prompting' && (
-        <button
-          onClick={enableGyro}
-          style={{
-            position: 'fixed',
-            bottom: '24px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 9999,
-            background: 'rgba(255,255,255,0.08)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.15)',
-            borderRadius: '40px',
-            padding: '14px 28px',
-            color: '#fff',
-            fontSize: '13px',
-            fontFamily: 'var(--font-mono, monospace)',
-            letterSpacing: '0.06em',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
-            pointerEvents: 'auto',
-          }}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="5" y="2" width="14" height="20" rx="3" />
-            <circle cx="12" cy="12" r="3" />
-            <path d="M12 6v1M12 17v1M6 12h1M17 12h1" />
-          </svg>
-          Enable Gyro Control
-        </button>
-      )}
-      {isMobile && gyroState === 'denied' && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: '24px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 9999,
-            background: 'rgba(239,68,68,0.12)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(239,68,68,0.25)',
-            borderRadius: '40px',
-            padding: '12px 24px',
-            color: 'rgba(255,255,255,0.6)',
-            fontSize: '12px',
-            fontFamily: 'var(--font-mono, monospace)',
-            letterSpacing: '0.04em',
-            pointerEvents: 'none',
-          }}
-        >
-          Gyro access denied — check device settings
-        </div>
-      )}
-    </>
-  )
+  return <div ref={mountRef} style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, pointerEvents: isMobile ? 'none' : 'auto', ...style }} />
 }
