@@ -46,7 +46,7 @@ export default function Navbar() {
           <nav className="navbar-links">
             <NavLink to="/services">Services</NavLink>
             <NavLink to="/project">Work</NavLink>
-            <NavLink to="/contact" className="navbar-cta">
+            <NavLink to="/contact" className="btn-pill navbar-cta">
               <span>Let's Talk</span>
             </NavLink>
           </nav>

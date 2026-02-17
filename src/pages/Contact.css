@@ -142,22 +142,30 @@
 }
 
 .contact-submit-btn[data-status="success"] {
-  border-color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.4);
   color: #22c55e;
+  box-shadow:
+    0 0 12px rgba(34, 197, 94, 0.15),
+    inset 0 0 12px rgba(34, 197, 94, 0.04);
 }
 
 .contact-submit-btn[data-status="error"] {
-  border-color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
   color: #ef4444;
+  box-shadow:
+    0 0 12px rgba(239, 68, 68, 0.15),
+    inset 0 0 12px rgba(239, 68, 68, 0.04);
 }
 
 .contact-submit-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .contact-submit-btn:disabled:hover {
   transform: none;
+  box-shadow: none;
 }
 
 .contact-submit-btn:disabled:hover::before {

@@ -90,6 +90,7 @@ export default function Robot3D({ style }) {
     let screenHalfW = getVisibleHalfWidth()
 
     /* ═══════════ INPUT ═══════════ */
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
     const mouse = new THREE.Vector2(0, 0)
     const cursorWorld = new THREE.Vector3(0, 0, 0)
     const gPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
@@ -102,25 +103,123 @@ export default function Robot3D({ style }) {
       mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1
       hasMouse = true
     }
-    const onTouch = (e) => {
-      if (!e.touches.length) return
-      const r = container.getBoundingClientRect()
-      mouse.x = ((e.touches[0].clientX - r.left) / r.width) * 2 - 1
-      mouse.y = -((e.touches[0].clientY - r.top) / r.height) * 2 + 1
-      hasMouse = true
-    }
+    // Only add mouse listener (no touch — it conflicts with scroll)
     window.addEventListener('mousemove', onMove)
-    window.addEventListener('touchmove', onTouch, { passive: true })
+
+    // On mobile: disable pointer events so scrolling works through the canvas
+    if (isTouchDevice) container.style.pointerEvents = 'none'
+
+    /* ═══════════ BUTTERFLY CURSOR (desktop only) ═══════════ */
+    if (!isTouchDevice) container.style.cursor = 'none'
+
+    let butterfly = null, bfStyle = null, bfAnimId = null, onMoveButterfly = null
+
+    if (!isTouchDevice) {
+      butterfly = document.createElement('div')
+      butterfly.innerHTML = `
+        <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
+             style="filter: drop-shadow(0 0 10px rgba(255,150,220,0.5));">
+          <defs>
+            <linearGradient id="wl1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ff6ec7"/>
+              <stop offset="50%" stop-color="#a855f7"/>
+              <stop offset="100%" stop-color="#3b82f6"/>
+            </linearGradient>
+            <linearGradient id="wl2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#f97316"/>
+              <stop offset="50%" stop-color="#ef4444"/>
+              <stop offset="100%" stop-color="#ec4899"/>
+            </linearGradient>
+            <linearGradient id="wr1" x1="1" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#06b6d4"/>
+              <stop offset="50%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#ec4899"/>
+            </linearGradient>
+            <linearGradient id="wr2" x1="1" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#facc15"/>
+              <stop offset="50%" stop-color="#f97316"/>
+              <stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+          </defs>
+          <g class="bf-body">
+            <ellipse cx="50" cy="50" rx="2.5" ry="16" fill="#1a1a2e"/>
+            <circle cx="50" cy="32" r="3.5" fill="#2d2b55"/>
+            <line x1="47" y1="28" x2="38" y2="12" stroke="#a855f7" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="53" y1="28" x2="62" y2="12" stroke="#ec4899" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="37" cy="11" r="2.2" fill="#facc15"/>
+            <circle cx="63" cy="11" r="2.2" fill="#facc15"/>
+          </g>
+          <g class="bf-wing-l" style="transform-origin:50px 45px;">
+            <path d="M50 35 Q18 10 8 38 Q3 55 28 54 Q40 54 50 48Z" fill="url(#wl1)" fill-opacity="0.75" stroke="rgba(255,255,255,0.3)" stroke-width="0.6"/>
+            <path d="M50 48 Q22 52 12 68 Q18 84 38 74 Q47 67 50 58Z" fill="url(#wl2)" fill-opacity="0.65" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+            <circle cx="25" cy="40" r="5" fill="rgba(255,255,255,0.15)"/>
+            <circle cx="28" cy="65" r="3.5" fill="rgba(255,255,255,0.12)"/>
+          </g>
+          <g class="bf-wing-r" style="transform-origin:50px 45px;">
+            <path d="M50 35 Q82 10 92 38 Q97 55 72 54 Q60 54 50 48Z" fill="url(#wr1)" fill-opacity="0.75" stroke="rgba(255,255,255,0.3)" stroke-width="0.6"/>
+            <path d="M50 48 Q78 52 88 68 Q82 84 62 74 Q53 67 50 58Z" fill="url(#wr2)" fill-opacity="0.65" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+            <circle cx="75" cy="40" r="5" fill="rgba(255,255,255,0.15)"/>
+            <circle cx="72" cy="65" r="3.5" fill="rgba(255,255,255,0.12)"/>
+          </g>
+        </svg>
+      `
+      butterfly.style.cssText = 'position:fixed;left:0;top:0;pointer-events:none;opacity:0;transition:opacity 0.4s;will-change:transform;'
+      container.appendChild(butterfly)
+
+      bfStyle = document.createElement('style')
+      bfStyle.textContent = `
+        .bf-wing-l { animation: bfFlapL 0.25s ease-in-out infinite alternate; }
+        .bf-wing-r { animation: bfFlapR 0.25s ease-in-out infinite alternate; }
+        @keyframes bfFlapL { 0% { transform: scaleX(1); } 100% { transform: scaleX(0.3) skewY(8deg); } }
+        @keyframes bfFlapR { 0% { transform: scaleX(1); } 100% { transform: scaleX(0.3) skewY(-8deg); } }
+      `
+      document.head.appendChild(bfStyle)
+
+      let bfX = 0, bfY = 0, bfTargetX = 0, bfTargetY = 0
+      let bfPrevX = 0, bfPrevY = 0, bfTime = 0
+      const updateButterfly = () => {
+        bfAnimId = requestAnimationFrame(updateButterfly)
+        bfTime += 0.016
+
+        const wobbleX = Math.sin(bfTime * 2.3) * 6 + Math.sin(bfTime * 5.1) * 3
+        const wobbleY = Math.sin(bfTime * 1.8) * 8 + Math.cos(bfTime * 3.7) * 4
+
+        const dx = (bfTargetX + wobbleX) - bfX
+        const dy = (bfTargetY + wobbleY) - bfY
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        const ease = Math.min(0.08 + dist * 0.0004, 0.18)
+        bfX += dx * ease
+        bfY += dy * ease
+
+        const velX = bfX - bfPrevX
+        const velY = bfY - bfPrevY
+        const tilt = Math.atan2(velY, velX) * (180 / Math.PI) + 90
+        const bankAngle = velX * -1.5
+
+        butterfly.style.transform = `translate(${bfX - 16}px, ${bfY - 16}px) rotate(${tilt * 0.15 + bankAngle}deg) scale(${1 + Math.sin(bfTime * 3) * 0.05})`
+
+        bfPrevX = bfX
+        bfPrevY = bfY
+      }
+      updateButterfly()
+
+      onMoveButterfly = (e) => {
+        bfTargetX = e.clientX
+        bfTargetY = e.clientY
+        butterfly.style.opacity = '1'
+      }
+      window.addEventListener('mousemove', onMoveButterfly)
+    }
 
     /* ═══════════ TRENDY MATERIALS ═══════════ */
-    // Modern matte ceramic body — soft white with subtle blue undertone
+    // Body — matching Kinect silver aluminum
     const matBody = new THREE.MeshPhysicalMaterial({
-      color: 0xe8eaef,
-      metalness: 0.05,
-      roughness: 0.35,
-      clearcoat: 0.4,
-      clearcoatRoughness: 0.25,
-      envMapIntensity: 0.6,
+      color: 0xd8dade,
+      metalness: 0.55,
+      roughness: 0.2,
+      clearcoat: 0.5,
+      clearcoatRoughness: 0.1,
+      envMapIntensity: 1.0,
     })
     // Gunmetal joints — dark with subtle metallic sheen
     const matJoints = new THREE.MeshPhysicalMaterial({
@@ -139,6 +238,37 @@ export default function Robot3D({ style }) {
       clearcoat: 0.6,
       clearcoatRoughness: 0.1,
       envMapIntensity: 1.0,
+    })
+
+    /* ═══════════ AZURE KINECT MATERIALS ═══════════ */
+    // Silver body — clean aluminum
+    const matAzureBody = new THREE.MeshPhysicalMaterial({
+      color: 0xd8dade,
+      metalness: 0.6,
+      roughness: 0.18,
+      clearcoat: 0.5,
+      clearcoatRoughness: 0.1,
+      envMapIntensity: 1.2,
+    })
+    // Dark sensor face — matte black
+    const matAzureDark = new THREE.MeshPhysicalMaterial({
+      color: 0x111115,
+      metalness: 0.3,
+      roughness: 0.6,
+      clearcoat: 0.2,
+      clearcoatRoughness: 0.3,
+      envMapIntensity: 0.4,
+    })
+    // Blue glass lens
+    const matAzureGlass = new THREE.MeshPhysicalMaterial({
+      color: 0x3355aa,
+      metalness: 0.1,
+      roughness: 0.05,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.05,
+      transmission: 0.3,
+      thickness: 0.5,
+      envMapIntensity: 1.5,
     })
 
     /* ═══════════ LOAD MODEL ═══════════ */
@@ -191,6 +321,84 @@ export default function Robot3D({ style }) {
 
       scene.add(model)
 
+      // Hide original head meshes (all mesh descendants of Head bone)
+      if (headBone) {
+        headBone.traverse((child) => {
+          if (child.isMesh) child.visible = false
+        })
+      }
+
+      // Build universal joint neck connector
+      if (neckBone) {
+        const neckGroup = new THREE.Group()
+
+        // Bottom ball joint (sits on body)
+        const ballBottom = new THREE.Mesh(
+          new THREE.SphereGeometry(0.0025, 16, 16),
+          matJoints
+        )
+        ballBottom.position.set(0, 0.001, 0)
+        ballBottom.castShadow = true
+        neckGroup.add(ballBottom)
+
+        // Main rod
+        const rod = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.0012, 0.0012, 0.005, 12),
+          matAccent
+        )
+        rod.position.set(0, 0.004, 0)
+        rod.castShadow = true
+        neckGroup.add(rod)
+
+        // Middle ring (decorative joint ring)
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(0.002, 0.0006, 8, 16),
+          matJoints
+        )
+        ring.position.set(0, 0.004, 0)
+        ring.rotation.x = Math.PI / 2
+        ring.castShadow = true
+        neckGroup.add(ring)
+
+        // Top ball joint (connects to Kinect head)
+        const ballTop = new THREE.Mesh(
+          new THREE.SphereGeometry(0.002, 16, 16),
+          matJoints
+        )
+        ballTop.position.set(0, 0.007, 0)
+        ballTop.castShadow = true
+        neckGroup.add(ballTop)
+
+        neckBone.add(neckGroup)
+      }
+
+      // Load Azure Kinect as replacement head
+      loader.load('/models/Azure.glb', (azureGltf) => {
+        const azure = azureGltf.scene
+
+        azure.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true
+            child.receiveShadow = true
+            const matName = child.material?.name || ''
+            if (matName === 'black' || matName === 'Material.001') {
+              child.material = matAzureDark
+            } else if (matName === 'sklo2' || matName === 'glass') {
+              child.material = matAzureGlass
+            } else {
+              child.material = matAzureBody
+            }
+          }
+        })
+
+        if (headBone) {
+          headBone.add(azure)
+          azure.scale.setScalar(0.075)
+          azure.position.set(0, 0.005, 0)
+          azure.rotation.set(0, 0, 0)
+        }
+      })
+
       // Setup animations — remove Head and Neck tracks so cursor controls them
       mixer = new THREE.AnimationMixer(model)
       gltf.animations.forEach((clip) => {
@@ -209,13 +417,43 @@ export default function Robot3D({ style }) {
     })
 
     // Crossfade between animations
+    let gestureInProgress = false
     const fadeToAction = (name, duration = 0.3) => {
+      if (gestureInProgress) return // don't interrupt gesture
       const newAction = actions[name]
       if (!newAction || newAction === activeAction) return
       if (activeAction) activeAction.fadeOut(duration)
       newAction.reset().fadeIn(duration).play()
       activeAction = newAction
     }
+
+    // ThumbsUp gesture on form submit
+    const onThumbsUp = () => {
+      if (!actions['ThumbsUp'] || gestureInProgress) return
+      gestureInProgress = true
+      const gesture = actions['ThumbsUp']
+      gesture.reset()
+      gesture.setLoop(THREE.LoopOnce)
+      gesture.clampWhenFinished = true
+      if (activeAction) activeAction.fadeOut(0.3)
+      gesture.fadeIn(0.3).play()
+      activeAction = gesture
+
+      // Return to idle after gesture finishes
+      const onFinished = (e) => {
+        if (e.action === gesture) {
+          mixer.removeEventListener('finished', onFinished)
+          gestureInProgress = false
+          gesture.fadeOut(0.4)
+          if (actions['Idle']) {
+            activeAction = actions['Idle']
+            activeAction.reset().fadeIn(0.4).play()
+          }
+        }
+      }
+      mixer.addEventListener('finished', onFinished)
+    }
+    window.addEventListener('robot-thumbsup', onThumbsUp)
 
     /* ═══════════ ANIMATION LOOP ═══════════ */
     const animate = () => {
@@ -341,13 +579,18 @@ export default function Robot3D({ style }) {
     return () => {
       if (animId) cancelAnimationFrame(animId)
       window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('touchmove', onTouch)
       window.removeEventListener('resize', onResize)
+      window.removeEventListener('robot-thumbsup', onThumbsUp)
+      if (onMoveButterfly) window.removeEventListener('mousemove', onMoveButterfly)
+      if (bfAnimId) cancelAnimationFrame(bfAnimId)
+      if (butterfly && container.contains(butterfly)) container.removeChild(butterfly)
+      if (bfStyle && bfStyle.parentNode) bfStyle.parentNode.removeChild(bfStyle)
       renderer.dispose()
       envMap.dispose()
       if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement)
     }
   }, [])
 
-  return <div ref={mountRef} style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, pointerEvents: 'auto', ...style }} />
+  const isMobile = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+  return <div ref={mountRef} style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, pointerEvents: isMobile ? 'none' : 'auto', ...style }} />
 }

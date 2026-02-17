@@ -20,6 +20,7 @@ function ContactForm() {
       if (data.success) {
         setStatus('success')
         e.target.reset()
+        window.dispatchEvent(new Event('robot-thumbsup'))
       } else {
         setStatus('error')
       }
@@ -91,7 +92,7 @@ export default function Contact() {
       <div style={{ position: 'fixed', left: 0, right: 0, bottom: '-10%', height: '50%', zIndex: 0, background: '#050505' }}>
         <Robot3D />
       </div>
-      <div className="contact-page" style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
+      <div className="contact-page" style={{ position: 'relative', zIndex: 2, pointerEvents: 'none' }}>
         <div className="contact-inner">
           <div className="contact-hero reveal">
             <p className="section-label">Get in Touch</p>

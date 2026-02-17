@@ -91,25 +91,18 @@
   width: 100%;
 }
 
-/* CTA Button in Nav */
-.navbar-cta {
-  padding: 9px 24px !important;
-  border: 1px solid var(--border-strong) !important;
-  border-radius: var(--radius-pill) !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.08em !important;
-  transition: all 0.4s var(--ease-out-expo) !important;
+/* CTA Button in Nav — compact glow pill */
+.navbar-links .navbar-cta {
+  padding: 10px 28px;
+  font-size: 11px;
 }
 
-.navbar-cta::after {
-  display: none !important;
+.navbar-links .navbar-cta::after {
+  display: none;
 }
 
-.navbar-cta:hover {
-  border-color: var(--border-strong) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  color: #fff !important;
+.navbar-links .navbar-cta:hover {
+  transform: translateY(-1px);
 }
 
 /* ── Hamburger (mobile only) ── */
