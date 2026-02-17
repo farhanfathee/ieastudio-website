@@ -1,19 +1,9 @@
 import Ballpit from './Ballpit'
+import './BallpitBackground.css'
 
 export default function BallpitBackground() {
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 0,
-        background: '#000000',
-        pointerEvents: 'none',
-      }}
-    >
+    <div className="ballpit-bg">
       <Ballpit
         count={170}
         gravity={0.2}

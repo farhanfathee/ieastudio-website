@@ -1,0 +1,19 @@
+.ballpit-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  background: #000000;
+  pointer-events: none;
+}
+
+/* Mobile: bottom half only */
+@media (max-width: 768px) {
+  .ballpit-bg {
+    top: auto;
+    bottom: 0;
+    height: 50vh;
+  }
+}
