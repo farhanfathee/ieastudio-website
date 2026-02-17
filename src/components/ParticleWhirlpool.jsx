@@ -152,7 +152,7 @@ export default function ParticleWhirlpool({ particleCount = 2000, blur = 0, chil
     }
 
     window.addEventListener('mousemove', onPointerMove)
-    window.addEventListener('touchmove', onPointerMove)
+    window.addEventListener('touchmove', onPointerMove, { passive: true })
     window.addEventListener('resize', onResize)
 
     return () => {
