@@ -92,7 +92,7 @@ export default function Contact() {
       <div style={{ position: 'fixed', left: 0, right: 0, bottom: '-10%', height: '50%', zIndex: 0, background: '#050505' }}>
         <Robot3D />
       </div>
-      <div className="contact-page" style={{ position: 'relative', zIndex: 2, pointerEvents: 'none' }}>
+      <div className="contact-page contact-page--overlay" style={{ position: 'relative', zIndex: 2 }}>
         <div className="contact-inner">
           <div className="contact-hero reveal">
             <p className="section-label">Get in Touch</p>
@@ -104,7 +104,7 @@ export default function Contact() {
               or creative technology challenge — we'd love to hear from you.
             </p>
           </div>
-          <div className="contact-form-section reveal reveal-d2" style={{ pointerEvents: 'auto' }}>
+          <div className="contact-form-section reveal reveal-d2">
             <ContactForm />
           </div>
         </div>

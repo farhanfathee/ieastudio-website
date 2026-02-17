@@ -7,6 +7,16 @@
   padding-top: var(--navbar-height);
 }
 
+/* Desktop: let clicks pass through to robot canvas behind */
+@media (hover: hover) and (pointer: fine) {
+  .contact-page--overlay {
+    pointer-events: none;
+  }
+  .contact-page--overlay .contact-form-section {
+    pointer-events: auto;
+  }
+}
+
 .contact-inner {
   display: flex;
   flex-direction: column;
