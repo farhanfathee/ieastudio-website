@@ -1,21 +1,22 @@
 import { useState } from 'react'
+import useScrollReveal from '../hooks/useScrollReveal'
 import './Contact.css'
 
 function ContactForm() {
-  const [status, setStatus] = useState('idle') // idle | sending | success | error
+  const [status, setStatus] = useState('idle')
 
   async function handleSubmit(e) {
     e.preventDefault()
     setStatus('sending')
     const formData = new FormData(e.target)
-    const json = JSON.stringify(Object.fromEntries(formData))
     try {
-      const res = await fetch('https://api.web3forms.com/submit', {
+      const res = await fetch('https://formsubmit.co/ajax/farhanfathee@gmail.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: json,
+        body: JSON.stringify(Object.fromEntries(formData)),
       })
-      if (res.status === 200) {
+      const data = await res.json()
+      if (data.success) {
         setStatus('success')
         e.target.reset()
       } else {
@@ -27,8 +28,9 @@ function ContactForm() {
   }
 
   return (
-    <form className="contact-form-wrapper" onSubmit={handleSubmit}>
-      <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
+    <form className="contact-form glass-card" onSubmit={handleSubmit}>
+      <input type="hidden" name="_subject" value="New Inquiry — IEA Studio" />
+      <input type="hidden" name="_captcha" value="false" />
 
       <div className="contact-form-grid">
         <div className="contact-input-group">
@@ -60,12 +62,9 @@ function ContactForm() {
 
       <button
         type="submit"
-        className="contact-submit-btn"
+        className="btn-pill contact-submit-btn"
         disabled={status === 'sending'}
-        style={{
-          opacity: status === 'sending' ? 0.6 : 1,
-          borderColor: status === 'success' ? '#22c55e' : status === 'error' ? '#ef4444' : undefined,
-        }}
+        data-status={status}
       >
         <span>
           {status === 'idle' && 'Send Inquiry'}
@@ -75,7 +74,7 @@ function ContactForm() {
         </span>
         {status === 'idle' && (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+            <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         )}
       </button>
@@ -84,9 +83,11 @@ function ContactForm() {
 }
 
 export default function Contact() {
+  useScrollReveal()
+
   return (
     <>
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0, background: '#000' }}>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, background: '#050505' }}>
         <iframe
           src="https://my.spline.design/3drobot-Jl6wJf8YKj20BkRIUic6iDex/"
           frameBorder="0"
@@ -97,11 +98,17 @@ export default function Contact() {
       </div>
       <div className="contact-page" style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
         <div className="contact-inner">
-          <div className="contact-left">
-            <h1 className="contact-hero-title">Let's Talk</h1>
-            <p className="contact-hero-sub">Have a project in mind? Whether it's an art installation, brand activation, or creative technology challenge, we'd love to hear from you.</p>
+          <div className="contact-hero reveal">
+            <p className="section-label">Get in Touch</p>
+            <h1 className="contact-hero-title">
+              Let's Talk
+            </h1>
+            <p className="contact-hero-sub">
+              Have a project in mind? Whether it's an art installation, brand activation,
+              or creative technology challenge — we'd love to hear from you.
+            </p>
           </div>
-          <div style={{ pointerEvents: 'auto' }}>
+          <div className="contact-form-section reveal reveal-d2" style={{ pointerEvents: 'auto' }}>
             <ContactForm />
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
+import ScrollToTop from './components/ScrollToTop'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import BallpitBackground from './components/BallpitBackground'
@@ -17,6 +18,7 @@ function App() {
       {showBallpit && <BallpitBackground />}
 
       {/* All page content sits above the background */}
+      <ScrollToTop />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <Navbar />
         <Routes>

@@ -1,4 +1,5 @@
 import ParticleWhirlpool from '../components/ParticleWhirlpool'
+import useScrollReveal from '../hooks/useScrollReveal'
 import './Services.css'
 
 const services = [
@@ -25,6 +26,8 @@ const services = [
 ]
 
 export default function Services() {
+  useScrollReveal()
+
   return (
     <>
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
@@ -32,21 +35,37 @@ export default function Services() {
       </div>
       <div className="services-page" style={{ position: 'relative', zIndex: 1 }}>
         <div className="services-hero">
-          <h1 className="services-hero-title">Experience<br />Design</h1>
-          <p className="services-hero-sub">We design and build immersive, interactive experiences that connect brands with audiences. From concept development to technical execution, we combine creativity and technology to deliver impactful installations, digital activations, and experiential environments.</p>
+          <p className="section-label reveal reveal-d1">What We Do</p>
+          <h1 className="services-hero-title reveal reveal-d2">
+            <span>Experience</span>
+            <span>Design</span>
+          </h1>
+          <p className="services-hero-sub reveal reveal-d3">
+            We design and build immersive, interactive experiences that connect brands
+            with audiences. From concept to technical execution, we combine creativity
+            and technology to deliver impactful results.
+          </p>
         </div>
 
         <div className="services-list">
-          <p className="services-list-label">What we do</p>
+          <p className="services-list-label section-label reveal">Our Capabilities</p>
           {services.map((s, i) => (
-            <div className="service-item" key={i}>
+            <div className="service-item reveal" key={i} style={{ transitionDelay: `${0.05 * i}s` }}>
               <div className="service-item-left">
                 <span className="service-item-number">{String(i + 1).padStart(2, '0')}</span>
                 <span className="service-item-title">{s.title}</span>
               </div>
               <p className="service-item-desc">{s.desc}</p>
+              <div className="service-item-gradient-line" />
             </div>
           ))}
+        </div>
+
+        <div className="services-cta reveal">
+          <h2 className="services-cta-title">
+            Have a project in mind?
+          </h2>
+          <a href="/contact" className="btn-pill"><span>Get in Touch</span></a>
         </div>
       </div>
     </>

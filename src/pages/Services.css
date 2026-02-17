@@ -1,7 +1,10 @@
+/* ═══════════════════════════════════════════════
+   Services Page — Enhanced List
+═══════════════════════════════════════════════ */
 .services-page {
   position: relative;
   min-height: 100vh;
-  padding-top: 57px;
+  padding-top: var(--navbar-height);
 }
 
 /* ── Hero ── */
@@ -13,60 +16,80 @@
   text-align: center;
   min-height: 70vh;
   padding: 0 24px;
+  gap: 0;
+}
+
+.services-hero .section-label {
+  margin-bottom: 28px;
 }
 
 .services-hero-title {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(45px, 8vw, 112px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: clamp(52px, 10vw, 130px);
   font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.01em;
-  line-height: 0.95;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  line-height: 0.92;
   text-transform: uppercase;
   margin-bottom: 32px;
 }
 
 .services-hero-sub {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(13px, 1.2vw, 16px);
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.2vw, 17px);
   font-weight: 400;
-  color: rgba(255,255,255,0.6);
+  color: var(--text-secondary);
   max-width: 560px;
-  line-height: 1.65;
-  letter-spacing: 0.01em;
+  line-height: 1.75;
 }
 
-/* ── Services List ── */
+/* ── Services List (separate section) ── */
 .services-list {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 32px 120px;
+  padding: clamp(80px, 10vw, 140px) clamp(24px, 4vw, 48px) 80px;
 }
 
 .services-list-label {
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.3);
   margin-bottom: 40px;
   padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .service-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border-subtle);
   cursor: default;
   overflow: hidden;
-  transition: border-color 0.3s ease;
+  position: relative;
+  transition: border-color 0.4s var(--ease-out-expo);
+}
+
+/* Gradient line that appears on hover */
+.service-item-gradient-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent-gradient);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.service-item:hover .service-item-gradient-line {
+  transform: scaleX(1);
 }
 
 .service-item:hover {
-  border-color: rgba(255,255,255,0.2);
+  border-color: transparent;
 }
 
 .service-item-left {
@@ -77,51 +100,83 @@
 }
 
 .service-item-number {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 400;
-  color: rgba(255,255,255,0.25);
+  color: var(--text-tertiary);
   letter-spacing: 0.1em;
   min-width: 28px;
-  transition: color 0.3s ease;
+  transition: color 0.4s var(--ease-out-expo);
 }
 
 .service-item-title {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(28px, 4vw, 56px);
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 52px);
   font-weight: 700;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.75);
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   line-height: 1;
-  transition: color 0.35s ease, transform 0.35s ease;
+  transition: color 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
 }
 
 .service-item-desc {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: clamp(12px, 1vw, 14px);
   font-weight: 400;
-  color: rgba(255,255,255,0);
+  color: rgba(255, 255, 255, 0);
   max-width: 320px;
-  line-height: 1.6;
+  line-height: 1.7;
   text-align: right;
-  transition: color 0.35s ease;
+  transition: color 0.4s var(--ease-out-expo);
 }
 
 .service-item:hover .service-item-title {
-  color: #ffffff;
-  transform: translateX(8px);
+  color: var(--text-primary);
+  transform: translateX(12px);
 }
 
 .service-item:hover .service-item-number {
-  color: rgba(255,255,255,0.5);
+  color: var(--accent-cyan);
 }
 
 .service-item:hover .service-item-desc {
-  color: rgba(255,255,255,0.45);
+  color: var(--text-secondary);
 }
 
+/* ── CTA Section ── */
+.services-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 80px 24px 120px;
+  gap: 32px;
+}
+
+.services-cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .service-item-desc { display: none; }
-  .services-list { padding: 0 20px 80px; }
+  .service-item-desc {
+    display: none;
+  }
+
+  .services-list {
+    padding: 0 20px 60px;
+  }
+
+  .service-item {
+    padding: 24px 0;
+  }
+
+  .services-cta {
+    padding: 60px 24px 80px;
+  }
 }
