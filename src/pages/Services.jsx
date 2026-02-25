@@ -30,9 +30,6 @@ export default function Services() {
 
   return (
     <>
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
-        <ParticleWhirlpool particleCount={2000} blur={0} />
-      </div>
       <div className="services-page" style={{ position: 'relative', zIndex: 1 }}>
         <div className="services-hero">
           <p className="section-label reveal reveal-d1">What We Do</p>
@@ -67,6 +64,16 @@ export default function Services() {
           </h2>
           <a href="/contact" className="btn-pill"><span>Get in Touch</span></a>
         </div>
+      </div>
+
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 2,
+        mixBlendMode: 'difference',
+        pointerEvents: 'none',
+      }}>
+        <ParticleWhirlpool particleCount={2000} blur={0} />
       </div>
     </>
   )

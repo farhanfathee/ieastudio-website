@@ -26,7 +26,6 @@
 
 .hero-content {
   position: relative;
-  z-index: 1;
   text-align: center;
   max-width: 900px;
   margin-top: -60px;
@@ -93,6 +92,7 @@
 
 /* Hero Description */
 .hero-desc {
+  position: relative;
   font-family: var(--font-body);
   font-size: clamp(14px, 1.1vw, 17px);
   font-weight: 400;
@@ -100,6 +100,7 @@
   line-height: 1.8;
   max-width: 520px;
   margin: 0 auto 44px;
+  mix-blend-mode: difference;
 }
 
 /* Hero Actions */
@@ -236,6 +237,7 @@
 }
 
 .split-heading {
+  position: relative;
   font-family: var(--font-display);
   font-size: clamp(28px, 3vw, 44px);
   font-weight: 700;
@@ -243,15 +245,18 @@
   line-height: 1.15;
   letter-spacing: -0.02em;
   margin-bottom: 20px;
+  mix-blend-mode: difference;
 }
 
 .split-sub {
+  position: relative;
   font-family: var(--font-body);
   font-size: clamp(14px, 1.1vw, 16px);
   font-weight: 400;
   color: var(--text-secondary);
   line-height: 1.8;
   margin-bottom: 36px;
+  mix-blend-mode: difference;
 }
 
 .split-video-wrap {

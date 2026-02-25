@@ -14,12 +14,11 @@ function App() {
 
   return (
     <>
-      {/* Fixed ballpit canvas — hidden on project page */}
-      {showBallpit && <BallpitBackground />}
-
       {/* All page content sits above the background */}
       <ScrollToTop />
       <div style={{ position: 'relative', zIndex: 1 }}>
+        {/* Ballpit inside wrapper so blend modes work */}
+        {showBallpit && <BallpitBackground />}
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />

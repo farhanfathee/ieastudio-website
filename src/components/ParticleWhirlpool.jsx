@@ -35,12 +35,12 @@ export default function ParticleWhirlpool({ particleCount = 2000, blur = 0, chil
     const instances = []
     for (let i = 0; i < particleCount; i++) {
       instances.push({
-        position: new Vector3(rndFS(200), rndFS(200), rndFS(200)),
+        position: new Vector3(rndFS(15), rndFS(15), rndFS(15)),
         scale: rnd(0.2, 1),
         scaleZ: rnd(0.1, 1),
         velocity: new Vector3(rndFS(2), rndFS(2), rndFS(2)),
-        attraction: 0.03 + rnd(-0.01, 0.01),
-        vLimit: 1.2 + rnd(-0.1, 0.1),
+        attraction: 0.012 + rnd(-0.004, 0.004),
+        vLimit: 0.7 + rnd(-0.1, 0.1),
       })
     }
 
@@ -73,7 +73,7 @@ export default function ParticleWhirlpool({ particleCount = 2000, blur = 0, chil
 
     const imesh = new InstancedMesh(
       new BoxGeometry(2, 2, 10),
-      new MeshBasicMaterial({ transparent: true, opacity: 0.9 }),
+      new MeshBasicMaterial({ transparent: true, opacity: 0.4 }),
       particleCount
     )
     scene.add(imesh)
