@@ -33,11 +33,11 @@ export default function Services() {
       <div className="services-page" style={{ position: 'relative', zIndex: 1 }}>
         <div className="services-hero">
           <p className="section-label reveal reveal-d1">What We Do</p>
-          <h1 className="services-hero-title reveal reveal-d2">
-            <span>Experience</span>
-            <span>Design</span>
+          <h1 className="services-hero-title reveal-clip">
+            <span className="clip-line clip-d1"><span>Experience</span></span>
+            <span className="clip-line clip-d2"><span>Design</span></span>
           </h1>
-          <p className="services-hero-sub reveal reveal-d3">
+          <p className="services-hero-sub reveal reveal-d2">
             We design and build immersive, interactive experiences that connect brands
             with audiences. From concept to technical execution, we combine creativity
             and technology to deliver impactful results.

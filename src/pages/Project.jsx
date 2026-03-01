@@ -68,11 +68,11 @@ export default function Project() {
       <div className="project-page" style={{ position: 'relative', zIndex: 1 }}>
         <div className="project-hero">
           <p className="section-label reveal reveal-d1">Portfolio</p>
-          <h1 className="project-hero-title reveal reveal-d2">
-            <span>Featured</span>
-            <span>Works</span>
+          <h1 className="project-hero-title reveal-clip">
+            <span className="clip-line clip-d1"><span>Featured</span></span>
+            <span className="clip-line clip-d2"><span>Works</span></span>
           </h1>
-          <p className="project-hero-sub reveal reveal-d3">
+          <p className="project-hero-sub reveal reveal-d2">
             From immersive installations to avant-garde digital art.
             We curate experiences that react, respond, and resonate.
           </p>

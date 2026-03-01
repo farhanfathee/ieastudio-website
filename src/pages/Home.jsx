@@ -10,21 +10,21 @@ export default function Home() {
       {/* ── S1: Hero ── */}
       <section className="hero">
         <div className="hero-content">
-          <h1 className="hero-title reveal reveal-d1">
-            <span className="hero-title-line">Immersive</span>
-            <span className="hero-title-line">Realities</span>
+          <h1 className="hero-title reveal-clip">
+            <span className="clip-line clip-d1"><span>Immersive</span></span>
+            <span className="clip-line clip-d2"><span>Realities</span></span>
           </h1>
-          <p className="hero-desc reveal reveal-d3">
+          <p className="hero-desc reveal reveal-d2">
             We craft interactive experiences that bridge the physical and digital worlds.
             Through technology, art, and storytelling, we transform spaces into
             immersive environments.
           </p>
-          <div className="hero-actions reveal reveal-d4">
+          <div className="hero-actions reveal reveal-d3">
             <a href="/project" className="btn-pill"><span>View Our Work</span></a>
             <a href="/contact" className="btn-pill"><span>Start a Project</span></a>
           </div>
         </div>
-        <div className="hero-scroll-indicator reveal reveal-d5">
+        <div className="hero-scroll-indicator reveal reveal-d4">
           <div className="hero-scroll-line" />
           <span>Scroll</span>
         </div>
@@ -90,9 +90,9 @@ export default function Home() {
       </section>
 
       {/* ── S5: Trusted by (Marquee) ── */}
-      <section className="section-clients reveal">
-        <p className="section-label clients-label">Trusted By</p>
-        <div className="marquee-track">
+      <section className="section-clients">
+        <h2 className="clients-title reveal">Clients We<br />Work With</h2>
+        <div className="marquee-track reveal reveal-d2">
           <div className="marquee-inner">
             {[1,2,3,4,5,6,7,8,9].map((n) => (
               <img key={n} src={`/logos/logo${n}.png`} alt={`Client ${n}`} className="marquee-logo" />

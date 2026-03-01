@@ -51,9 +51,10 @@ function ContactForm() {
           <label>Budget Range *</label>
           <select name="budget" required defaultValue="">
             <option value="" disabled>Select budget range</option>
-            <option value="1k-5k">$1,000 – $5,000</option>
-            <option value="5k-10k">$5,000 – $10,000</option>
-            <option value="10k+">$10,000+</option>
+            <option value="5k-10k">RM5,000 – RM10,000</option>
+            <option value="10k-20k">RM10,000 – RM20,000</option>
+            <option value="20k-50k">RM20,000 – RM50,000</option>
+            <option value="50k+">RM50,000 and above</option>
           </select>
         </div>
         <div className="contact-input-group full">
@@ -94,12 +95,12 @@ export default function Contact() {
       </div>
       <div className="contact-page contact-page--overlay" style={{ position: 'relative', zIndex: 2 }}>
         <div className="contact-inner">
-          <div className="contact-hero reveal">
-            <p className="section-label">Get in Touch</p>
+          <div className="contact-hero reveal-clip">
+            <p className="section-label" style={{ opacity: 0, animation: 'fadeIn 0.8s 0.3s var(--ease-out-expo) forwards' }}>Get in Touch</p>
             <h1 className="contact-hero-title">
-              Let's Talk
+              <span className="clip-line clip-d1"><span>Let's Talk</span></span>
             </h1>
-            <p className="contact-hero-sub">
+            <p className="contact-hero-sub" style={{ opacity: 0, animation: 'fadeIn 0.8s 0.5s var(--ease-out-expo) forwards' }}>
               Have a project in mind? Whether it's an art installation, brand activation,
               or creative technology challenge — we'd love to hear from you.
             </p>

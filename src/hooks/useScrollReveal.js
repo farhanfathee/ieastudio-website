@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 export default function useScrollReveal() {
   useEffect(() => {
-    const elements = document.querySelectorAll('.reveal, .reveal-fade, .reveal-left, .reveal-right, .reveal-scale')
+    const elements = document.querySelectorAll('.reveal, .reveal-fade, .reveal-left, .reveal-right, .reveal-scale, .reveal-clip')
 
     const observer = new IntersectionObserver(
       (entries) => {
