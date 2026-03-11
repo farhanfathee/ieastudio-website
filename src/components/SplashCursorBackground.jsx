@@ -19,7 +19,7 @@ export default function SplashCursorBackground() {
         DENSITY_DISSIPATION={4}
         VELOCITY_DISSIPATION={2.5}
         PRESSURE={0.1}
-        CURL={3}
+        CURL={8}
         SPLAT_RADIUS={0.68}
         SPLAT_FORCE={6500}
         COLOR_UPDATE_SPEED={5}

@@ -7,7 +7,7 @@ export default function BallpitBackground() {
   return (
     <div className="ballpit-bg">
       <Ballpit
-        count={isMobile ? 85 : 207}
+        count={isMobile ? 192 : 467}
         gravity={0.2}
         wallBounce={1}
         followCursor={false}

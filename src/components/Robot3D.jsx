@@ -91,7 +91,7 @@ export default function Robot3D({ style }) {
     let screenHalfW = getVisibleHalfWidth()
 
     /* ═══════════ INPUT ═══════════ */
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
     const mouse = new THREE.Vector2(0, 0)
     const cursorWorld = new THREE.Vector3(0, 0, 0)
     const gPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
@@ -193,8 +193,8 @@ export default function Robot3D({ style }) {
           </g>
         </svg>
       `
-      butterfly.style.cssText = 'position:fixed;left:0;top:0;pointer-events:none;opacity:0;transition:opacity 0.4s;will-change:transform;'
-      container.appendChild(butterfly)
+      butterfly.style.cssText = 'position:fixed;left:0;top:0;pointer-events:none;opacity:0;transition:opacity 0.4s;will-change:transform;z-index:9999;'
+      document.body.appendChild(butterfly)
 
       bfStyle = document.createElement('style')
       bfStyle.textContent = `
@@ -613,7 +613,7 @@ export default function Robot3D({ style }) {
       window.removeEventListener('robot-thumbsup', onThumbsUp)
       if (onMoveButterfly) window.removeEventListener('mousemove', onMoveButterfly)
       if (bfAnimId) cancelAnimationFrame(bfAnimId)
-      if (butterfly && container.contains(butterfly)) container.removeChild(butterfly)
+      if (butterfly && document.body.contains(butterfly)) document.body.removeChild(butterfly)
       if (bfStyle && bfStyle.parentNode) bfStyle.parentNode.removeChild(bfStyle)
       if (gyroHandler) window.removeEventListener('deviceorientation', gyroHandler)
       renderer.dispose()
