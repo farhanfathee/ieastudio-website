@@ -1,0 +1,55 @@
+.mobile-disclaimer {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  animation: disclaimer-fade-in 0.8s var(--ease-out-expo) forwards;
+}
+
+@keyframes disclaimer-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.mobile-disclaimer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 28px;
+  max-width: 320px;
+  animation: disclaimer-slide-up 1s 0.2s var(--ease-out-expo) both;
+}
+
+@keyframes disclaimer-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-disclaimer-icon {
+  color: var(--accent-cyan);
+  opacity: 0.8;
+}
+
+.mobile-disclaimer-text {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+.mobile-disclaimer-btn {
+  margin-top: 8px;
+}

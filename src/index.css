@@ -227,6 +227,19 @@ body::after {
   opacity: 0.7;
 }
 
+/* Active/tap state for touch devices */
+.btn-pill:active {
+  transform: scale(0.97);
+  border-color: rgba(0, 229, 255, 0.3);
+  box-shadow:
+    0 2px 12px rgba(0, 128, 255, 0.25),
+    inset 0 -12px 24px rgba(0, 40, 255, 0.08);
+}
+
+.btn-pill:active::before {
+  opacity: 0.5;
+}
+
 .btn-pill span,
 .btn-pill svg {
   position: relative;
@@ -378,3 +391,31 @@ body::after {
    Tablet: 768px – 1024px
    Desktop: > 1024px
 ═══════════════════════════════ */
+
+/* ═══════════════════════════════
+   Mobile Optimizations
+═══════════════════════════════ */
+@media (max-width: 768px) {
+  /* Increase small label font sizes for readability */
+  .section-label {
+    font-size: 12px;
+  }
+
+  /* Larger button tap targets */
+  .btn-pill {
+    padding: 14px 28px;
+    font-size: 13px;
+    min-height: 48px;
+  }
+
+  /* Glass card: no hover effect on mobile (no sticky hover) */
+  .glass-card:hover {
+    background: var(--bg-glass);
+    border-color: var(--border-subtle);
+  }
+
+  .glass-card:active {
+    background: var(--bg-glass-hover);
+    border-color: var(--border-default);
+  }
+}

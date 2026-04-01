@@ -14,26 +14,36 @@ const projects = [
 
 function ProjectCard({ project, index }) {
   const videoRef = useRef(null)
+  const isTouchDevice = typeof window !== 'undefined' &&
+    ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
 
-    const onLoaded = () => {
-      video.currentTime = Math.random() * video.duration
-      video.pause()
+    if (isTouchDevice) {
+      // On touch devices, auto-play all videos since there's no hover
+      video.play().catch(() => {})
+    } else {
+      const onLoaded = () => {
+        video.currentTime = Math.random() * video.duration
+        video.pause()
+      }
+      video.addEventListener('loadedmetadata', onLoaded)
+      return () => video.removeEventListener('loadedmetadata', onLoaded)
     }
+  }, [isTouchDevice])
 
-    video.addEventListener('loadedmetadata', onLoaded)
-    return () => video.removeEventListener('loadedmetadata', onLoaded)
-  }, [])
-
-  const handleMouseEnter = () => videoRef.current?.play()
-  const handleMouseLeave = () => videoRef.current?.pause()
+  const handleMouseEnter = () => {
+    if (!isTouchDevice) videoRef.current?.play()
+  }
+  const handleMouseLeave = () => {
+    if (!isTouchDevice) videoRef.current?.pause()
+  }
 
   return (
     <div
-      className="project-card reveal"
+      className={`project-card reveal${isTouchDevice ? ' touch' : ''}`}
       style={{ transitionDelay: `${0.08 * index}s` }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

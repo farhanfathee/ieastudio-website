@@ -237,5 +237,25 @@
 
   .navbar-hamburger {
     display: flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-menu {
+    padding: 100px 28px 40px;
+  }
+
+  .mobile-menu-link {
+    padding: 20px 0;
+  }
+
+  .mobile-menu-link:active .mobile-menu-label {
+    color: var(--accent-cyan);
+  }
+
+  .mobile-menu-num {
+    font-size: 11px;
   }
 }
